@@ -1,3 +1,8 @@
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const ApiError = require("../utils/ApiError");
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -22,3 +27,36 @@ const userSchema = mongoose.Schema({
     minlength: 8,
   },
 });
+
+userSchema.statics.findUserByCredentials = function findUserByCredentials(
+  email,
+  password
+) {
+  return this.findOne({ email })
+    .select("+password")
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(
+          new ApiError({
+            statusCode: 401,
+            message: "Неправильные почта или пароль",
+          })
+        );
+      }
+
+      return bcrypt.compare(password, user.password).then((isEqualPassword) => {
+        if (!isEqualPassword) {
+          return Promise.reject(
+            new ApiError({
+              statusCode: 401,
+              message: "Неправильные почта или пароль",
+            })
+          );
+        }
+
+        return user;
+      });
+    });
+};
+
+module.exports = { userSchema };
