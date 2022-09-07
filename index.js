@@ -6,11 +6,13 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
 
+const router = require("./routes/routes");
 const { limiterMiddleware } = require("./middlewares/limiter");
 const { errorMiddleware } = require("./middlewares/error");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
-const router = require("./routes/routes");
 const { PORT, DATABASE_URL } = require("./config");
+
+mongoose.connect(DATABASE_URL);
 
 const app = express();
 
@@ -24,5 +26,4 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorMiddleware);
 
-mongoose.connect(DATABASE_URL);
 app.listen(PORT);

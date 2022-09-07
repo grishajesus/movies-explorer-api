@@ -62,11 +62,11 @@ const deleteMovie = async (req, res, next) => {
 
     if (!movie.owner.equals(req.user._id)) {
       throw new ForbiddenError("access error");
-    } else {
-      const deletedMovie = await movie.remove();
-
-      return res.send({ message: deletedMovie });
     }
+
+    const deletedMovie = await movie.remove();
+
+    return res.send({ message: deletedMovie });
   } catch (error) {
     if (error.name === "CastError") {
       return next(new BadRequestError("wrong data movie delete"));

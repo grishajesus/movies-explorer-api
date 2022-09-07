@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const isEmail = require("validator/lib/isEmail");
 
 const ApiError = require("../utils/ApiError");
 
@@ -59,4 +60,4 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(
     });
 };
 
-module.exports = { userSchema };
+module.exports = mongoose.model("user", userSchema);

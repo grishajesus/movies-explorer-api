@@ -57,6 +57,7 @@ const createUser = async (req, res, next) => {
 
     return res.send(user);
   } catch (error) {
+    console.log(error);
     if (error.name === "ValidationError") {
       return next(new BadRequestError("wrong user data"));
     }
